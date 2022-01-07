@@ -18,12 +18,16 @@ def receive():                                                                  
 
 #Håndtering af afsendte beskeder.
 def send(event=None):                                                                                   #Funktionen som sørger for at sende ens besked ind til serveren som sender det ud til de andre.
+    global isConnected
     msg = my_msg.get()                                                                                  #Gemmer brugerens besked i en variabel.
     my_msg.set("")                                                                                      #Rydder inputfeltet.
     client_socket.send(bytes(msg, "utf8"))                                                              #Sender beskeden til serveren.
     if msg == "/afslut": 
         client_socket.close()                                                                           #Lukker forbindelsen
         root.quit()  # Lukker tkinter
+    elif msg == "/disconnect":
+        client_socket.close()  # Lukker forbindelsen
+        isConnected = False
 
 #Håndtering af ordentlig afkobling.
 def on_closing(event=None):                                                                             #Funktionen sørger for at lukke forbindelsen, hvis nu man klikker på det røde kryds.
@@ -35,6 +39,11 @@ def on_closing(event=None):                                                     
 def init():
     global isConnected
     isConnected = False
+
+def disconnect():
+    if isConnected == True:
+        my_msg.set("/disconnect")
+        send()
 
 #Tilslutning til server - SOCKET
 def connect():

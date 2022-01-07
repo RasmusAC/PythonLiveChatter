@@ -23,14 +23,19 @@ def handle_client(client):                                                      
 
     while True:                                                                             #Centrale loop for al komunikation.
         msg = client.recv(BUFSIZ)                                                           #Henter beskeden. Henter 'BUFSIZ' (1024 byte) af gangen, og kører igen hvis noget tekst mangler.
-        if msg != bytes("/afslut", "utf8"):                                                  #Hvis brugeren ikke har skrevet /afslut, så udskriver den brugerens besked.
-            broadcast(msg, name+": ")                                                       #Udskriver brugerens navn og besked.
-        else:
-            print("%s:%s har forladt chatten." % client_address)                            #Skriver i server konsollen, at en bruger har forladt chatten.
-            client.close()                                                                  #Lukker forbindelsen for brugeren.
-            del clients[client]                                                             #Sletter brugeren fra systemet.
-            broadcast(bytes("%s har forladt chatten." % name, "utf8"))                      #Fortæller brugerne at en bruger har forladt chatten.
+        if msg == bytes("/afslut", "utf8"):                                                  #Hvis brugeren ikke har skrevet /afslut, så udskriver den brugerens besked.
+            client.close()  # Lukker forbindelsen for brugeren.
+            del clients[client]  # Sletter brugeren fra systemet.
+            broadcast(bytes("%s har forladt chatten." % name, "utf8"))  # Fortæller brugerne at en bruger har forladt chatten.
             break
+        elif msg == bytes("/disconnect", "utf8"):
+            client.close()  # Lukker forbindelsen for brugeren.
+            del clients[client]  # Sletter brugeren fra systemet.
+            broadcast(bytes("%s har forladt chatten." % name, "utf8"))  # Fortæller brugerne at en bruger har forladt chatten.
+            break
+
+        else:
+            broadcast(msg, name + ": ")  # Udskriver brugerens navn og besked.
 
 #Udsendelse af beskeder
 def broadcast(msg, prefix=""):                                                              #Funktionen som udsender beskeder til alle i chatten. Argumentet prefix er så folk kan se hvem der sender beskeden.
@@ -42,7 +47,7 @@ def broadcast(msg, prefix=""):                                                  
 clients = {}                                                                                #Brugernes navn
 addresses = {}                                                                              #Brugernes adresse (ip og port)
 
-HOST = '192.168.0.81'                                                                       #Hostens ip-adresse.
+HOST = '192.168.0.74'                                                                       #Hostens ip-adresse.
 PORT = 33000                                                                                #Hostens port.
 BUFSIZ = 1024                                                                               #Sætter en bufferstørrelse, hvor antallet er i bytes.
 ADDR = (HOST, PORT)                                                                         #Samler host og porten til en tuple.
