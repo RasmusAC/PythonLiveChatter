@@ -7,7 +7,7 @@ from threading import Thread
 def accept_incoming_connections():                                                          #Funktionen som kan acceptere indgående forbindelser til serveren.
     while True:                                                                             #Loop som tjekker for indgående anmodninger til at forbinde til serveren.
         client, client_address = SERVER.accept()                                            #Accepterer forbindelsen for brugeren.
-        print("%s:%s har tilsluttet serveren." % client_address)                            #Skriver i server konsollen, at en bruger har forbundet til serveren.
+        print("%s:%s har tilsluttet chatten." % client_address)                             #Skriver i server konsollen, at en bruger har forbundet til chatten.
         client.send(bytes("Velkommen til chatten. Skriv dit navn og klik enter.", "utf8"))  #Skriver en besked til brugeren med utf8 format.
         addresses[client] = client_address                                                  #Opbevare den brugerens adresseoplysninger.
         Thread(target=handle_client, args=(client,)).start()                                #Håndterer den brugeren (nedenstående funktion bliver kaldt).
@@ -15,7 +15,7 @@ def accept_incoming_connections():                                              
 #Håndtering af brugeren(e)
 def handle_client(client):                                                                  #Funktionen som skal håndtere brugeren, og tager derfor 1 argument, som er brugeren.
     name = client.recv(BUFSIZ).decode("utf8")                                               #Gemmer brugerens nye navn.
-    welcome = 'Velkommen %s! Skriv {stop} for at afslutte.' % name                          #En velkomstbesked bliver gemt.
+    welcome = 'Velkommen %s! Skriv /afslut for at afslutte.' % name                         #En velkomstbesked bliver gemt.
     client.send(bytes(welcome, "utf8"))                                                     #Sender velkomstbeskeden til den nye bruger.
     msg = "%s har tilsluttet sig chatten!" % name                                           #En besked til chatten gemt.
     broadcast(bytes(msg, "utf8"))                                                           #Sender beskeden.
@@ -23,10 +23,10 @@ def handle_client(client):                                                      
 
     while True:                                                                             #Centrale loop for al komunikation.
         msg = client.recv(BUFSIZ)                                                           #Henter beskeden. Henter 'BUFSIZ' (1024 byte) af gangen, og kører igen hvis noget tekst mangler.
-        if msg != bytes("{stop}", "utf8"):                                                  #Hvis brugeren ikke har skrevet {stop}, så udskriver den brugerens besked.
+        if msg != bytes("/afslut", "utf8"):                                                  #Hvis brugeren ikke har skrevet /afslut, så udskriver den brugerens besked.
             broadcast(msg, name+": ")                                                       #Udskriver brugerens navn og besked.
         else:
-            #client.send(bytes("{stop}", "utf8"))                                            #Ellers hvis brugeren har skrevet {stop}.
+            print("%s:%s har forladt chatten." % client_address)                            #Skriver i server konsollen, at en bruger har forladt chatten.
             client.close()                                                                  #Lukker forbindelsen for brugeren.
             del clients[client]                                                             #Sletter brugeren fra systemet.
             broadcast(bytes("%s har forladt chatten." % name, "utf8"))                      #Fortæller brugerne at en bruger har forladt chatten.
