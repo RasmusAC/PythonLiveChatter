@@ -1,11 +1,13 @@
-#ctypes bruges til at minimere consolen
+#ctypes bruges til at minimere consolen.
 import ctypes
 #Socket modulet bruges til at forbinde de forskellige computere netværk.
 from socket import AF_INET, socket, SOCK_STREAM
 #Threading bruges til at kører flere ting på én gang.
 from threading import Thread
-#TkInter bruges til at skabe en GUI
+#TkInter bruges til at skabe en GUI.
 import tkinter as tk
+#Webbrowser bruges til at åbne en browserside.
+import webbrowser
 
 #Håndtering af modtaget beskeder.
 def receive():                                                                                          #Funktionen som gør at beskeder der er modtaget bliver vist i chatten.
@@ -13,6 +15,7 @@ def receive():                                                                  
         try:
             msg = client_socket.recv(BUFSIZ).decode("utf8")                                             #'.recv' gør at den venter på at modtage en besked, og går ikke videre i koden før.
             msg_list.insert(tk.END, msg)                                                                #Tilføljer beskeden til en liste.
+            msg_list.see("end")                                                                         #Automatisk scroll, hvis der er mange beskeder.
         except OSError:                                                                                 #Et lille sikkerhedsnet i tilfælde af en bruger kobler af.
             break
 
@@ -90,11 +93,11 @@ def connect():
         msg_list.insert(tk.END, "Forkert host eller port")
         print("fejl i connect")
 
-    #if isConnected == True:
-        #Send navn besked
-        #name = TkNAME.get()
-        #my_msg.set(name)
-        #send()
+def callWebInfo():
+    webbrowser.open("http://elev.htxroskilde.dk/2018/rasmusac18/livechatter/startside.html")
+
+def callWebServerList():
+    webbrowser.open("http://elev.htxroskilde.dk/2018/rasmusac18/livechatter/serverlist.html")
 
 #Kalder init
 init()
@@ -109,7 +112,7 @@ WIDTH = 750
 root = tk.Tk()
 root.minsize(WIDTH, HEIGHT)
 root.maxsize(WIDTH, HEIGHT)
-root.title("Corona chat")
+root.title("Live Chatter")
 
 canvas = tk.Canvas(root, height=HEIGHT, width=WIDTH)
 canvas.place(relheight=1, relwidth=1)
@@ -124,7 +127,7 @@ frame_right = tk.Frame(canvas)
 frame_right.place(rely=0.15, relx=0.3, relheight=0.85, relwidth=0.7)
 
 #TOP-----------------------------------------------------------------------
-titel = tk.Label(frame_top, text="Corona Chat", font=("Arial", 36))
+titel = tk.Label(frame_top, text="Live Chatter", font=("Arial", 36))
 titel.pack()
 
 #VENSTRE------------------------------------------------------------------- 
@@ -139,6 +142,9 @@ frame_name.place(rely=0.30, relx=0, relheight=0.15, relwidth=1)
 
 frame_btn = tk.Frame(frame_left)
 frame_btn.place(rely=0.45, relx=0, relheight=0.15, relwidth=1)
+
+frame_btnhelp = tk.Frame(frame_left)
+frame_btnhelp.place(rely=0.625, relx=0, relheight=0.15, relwidth=1)
 
 hostLabel = tk.Label(frame_host, text="Host:")
 hostLabel.place(rely=0.1, relx=0.025, relheight=0.4, relwidth=0.125)
@@ -163,11 +169,18 @@ name_entry.place(rely=0.5, relx=0.025, relheight=0.35, relwidth=0.975)
 
 disconnect_button = tk.Button(frame_btn, text="Log ud", command=disconnect)
 disconnect_button.place(rely=0.1, relx=0.125, relheight=0.4, relwidth=0.3)
+
 login_button = tk.Button(frame_btn, text="Login", command=connect)
 login_button.place(rely=0.1, relx=0.572, relheight=0.4, relwidth=0.3)
 
 afslut_button = tk.Button(frame_btn, text="Afslut", command=on_closing)
 afslut_button.place(rely=0.6, relx=0.125, relheight=0.4, relwidth=0.75)
+
+info_button = tk.Button(frame_btnhelp, text="Information", command=callWebInfo)
+info_button.place(rely=0.6, relx=0.07, relheight=0.4, relwidth=0.4)
+
+list_button = tk.Button(frame_btnhelp, text="Server liste", command=callWebServerList)
+list_button.place(rely=0.6, relx=0.53, relheight=0.4, relwidth=0.4)
 
 #HØJRE-------------------------------------------------------------------
 messages_frame = tk.Frame(frame_right)

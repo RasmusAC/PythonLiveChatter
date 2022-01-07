@@ -56,7 +56,7 @@ def broadcast(msg, prefix=""):                                                  
 clients = {}                                                                                #Brugernes navn
 addresses = {}                                                                              #Brugernes adresse (ip og port)
 
-HOST = '192.168.0.119'#81'                                                                       #Hostens ip-adresse.
+HOST = '192.168.87.235'                                                                       #Hostens ip-adresse.
 PORT = 33000                                                                                #Hostens port.
 BUFSIZ = 1024                                                                               #Sætter en bufferstørrelse, hvor antallet er i bytes.
 ADDR = (HOST, PORT)                                                                         #Samler host og porten til en tuple.
