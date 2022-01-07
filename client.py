@@ -44,6 +44,7 @@ def disconnect():
     if isConnected == True:
         my_msg.set("/disconnect")
         send()
+        msg_list.delete(0,tk.END)
 
 #Tilslutning til server - SOCKET
 def connect():
@@ -53,6 +54,10 @@ def connect():
     global BUFSIZ
     global ADDR
     global isConnected
+    global tkNAME
+
+    disconnect()
+    
     HOST = TkHOST.get()
     PORT = TkPORT.get()
 
@@ -67,16 +72,29 @@ def connect():
     client_socket = socket(AF_INET, SOCK_STREAM)  # Starter serveren med en TCP protokol.
 
     try:
-        client_socket.connect(ADDR)  # Serveren bliver bundet til computerens adresse.
-        # Begynder at starte programmet.
-        receive_thread = Thread(target=receive)  # Initialiserer multithreading for recieve funktionen.
-        receive_thread.start()  # Den starter tråden.
-        isConnected = True
+        name = TkNAME.get()
+        if not name:
+            msg_list.insert(tk.END, "Indtast et navn")
+        else:
+            
+            client_socket.connect(ADDR)  # Serveren bliver bundet til computerens adresse.
+            # Begynder at starte programmet.
+            receive_thread = Thread(target=receive)  # Initialiserer multithreading for recieve funktionen.
+            receive_thread.start()  # Den starter tråden.
+            isConnected = True
+            my_msg.set(name)
+            send()
+            
     except:
         isConnected = False
-        TkHOST.set("Forkert host eller port")
-        TkPORT.set("Forkert host eller port")
+        msg_list.insert(tk.END, "Forkert host eller port")
         print("fejl i connect")
+
+    #if isConnected == True:
+        #Send navn besked
+        #name = TkNAME.get()
+        #my_msg.set(name)
+        #send()
 
 #Kalder init
 init()
@@ -138,13 +156,18 @@ port_entry.place(rely=0.5, relx=0.025, relheight=0.35, relwidth=0.975)
 
 nameLabel = tk.Label(frame_name, text="Navn:")
 nameLabel.place(rely=0.1, relx=0.025, relheight=0.4, relwidth=0.14)
-name_entry = tk.Entry(frame_name)
+TkNAME = tk.StringVar()
+TkNAME.set("")
+name_entry = tk.Entry(frame_name, textvariable=TkNAME)
 name_entry.place(rely=0.5, relx=0.025, relheight=0.35, relwidth=0.975)
 
-afslut_button = tk.Button(frame_btn, text="Afslut", command=on_closing)
-afslut_button.place(rely=0.1, relx=0.125, relheight=0.4, relwidth=0.3)
+disconnect_button = tk.Button(frame_btn, text="Log ud", command=disconnect)
+disconnect_button.place(rely=0.1, relx=0.125, relheight=0.4, relwidth=0.3)
 login_button = tk.Button(frame_btn, text="Login", command=connect)
 login_button.place(rely=0.1, relx=0.572, relheight=0.4, relwidth=0.3)
+
+afslut_button = tk.Button(frame_btn, text="Afslut", command=on_closing)
+afslut_button.place(rely=0.6, relx=0.125, relheight=0.4, relwidth=0.75)
 
 #HØJRE-------------------------------------------------------------------
 messages_frame = tk.Frame(frame_right)
