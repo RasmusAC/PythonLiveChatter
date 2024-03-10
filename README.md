@@ -7,21 +7,18 @@ This program allows you to easily setup and/or join a live chat.
 - [Requirements](#requirements)
 - [How to use Client](#how-to-use-client)
 - [Server Installation](#server-installation)
-- [Usage](#usage)
 - [License](#license)
 
 ## Introduction
 A simple and minimalistic live chat program I have made using Python. This was my end-of-year project in programming from technical highscool (HTX Roskilde).
 
 ## Features
-
 - Lightweight and simple GUI.
 - Custom username.
 - Automatic server logging.
 - Option to easily create custom commands.
 
 ## Requirements
-
 Python 3.x (this program was made using Python 3.7.1)
 
 ## How to use Client
@@ -40,3 +37,6 @@ Python 3.x (this program was made using Python 3.7.1)
 7. You can choose whichever port you like.
 8. How run the program and the server should start up.
 9. The log is saved in the same folder as the server file.
+
+## License
+[License](./LICENSE.md)
