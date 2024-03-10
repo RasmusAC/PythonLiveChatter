@@ -1,9 +1,7 @@
 # Live Chat Program in Python
-
-A simple and minimalistic live chat program I have made using Python. This was my end-of-year project in programming from technical highscool (HTX Roskilde).
+This program allows you to easily setup and/or join a live chat. 
 
 ## Table of Contents
-
 - [Introduction](#introduction)
 - [Features](#features)
 - [Requirements](#requirements)
@@ -13,8 +11,7 @@ A simple and minimalistic live chat program I have made using Python. This was m
 - [License](#license)
 
 ## Introduction
-
-This program allows you to easily setup and/or join a live chat. 
+A simple and minimalistic live chat program I have made using Python. This was my end-of-year project in programming from technical highscool (HTX Roskilde).
 
 ## Features
 
